@@ -18,12 +18,12 @@ import { globalSearch, type RocketDesign, type SimulationRecord, type Report } f
 
 const NAV_ITEMS = [
   { href: "/workspace", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/workspace/rockets", label: "Rocket Library", icon: Rocket },
-  { href: "/workspace/simulations", label: "Simulation History", icon: History },
+  { href: "/designer", label: "Rocket Designer", icon: Rocket },
+  { href: "/simulate", label: "Simulation", icon: History },
+  { href: "/workspace/rockets", label: "Rocket Library", icon: FolderOpen },
+  { href: "/workspace/simulations", label: "Simulation History", icon: GitCompareArrows },
   { href: "/workspace/validations", label: "Validation History", icon: BarChart3 },
-  { href: "/workspace/compare", label: "Comparison", icon: GitCompareArrows },
   { href: "/workspace/reports", label: "Reports", icon: FileText },
-  { href: "/workspace/projects", label: "Project Files", icon: FolderOpen },
 ];
 
 export default function WorkspaceLayout({

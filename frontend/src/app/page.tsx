@@ -81,17 +81,20 @@ export default function Home() {
           </div>
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/simulate" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-              Simulate
+              Simulation
             </Link>
-            <Link href="/validate" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-              Validate
+            <Link href="/designer" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+              Rocket Designer
             </Link>
             <Link href="/workspace" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
               Workspace
             </Link>
-            <a href="https://github.com/o1ie12/SOARsim" className="text-sm text-muted-foreground transition-colors hover:text-foreground" target="_blank" rel="noopener noreferrer">
-              GitHub
-            </a>
+            <Link href="/validate" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+              Validation
+            </Link>
+            <Link href="/analyze" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+              Reports
+            </Link>
           </nav>
           <div className="flex items-center gap-3">
             <Link
