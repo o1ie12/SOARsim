@@ -5,6 +5,16 @@ All notable changes to SOARSim will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2026-07-22
+
+### Fixed
+
+- **Stale GitHub URLs** — Updated all `github.com/soarsim/soarsim` references to `github.com/o1ie12/SOARsim` on the landing page navigation, CTA buttons, and footer
+- **Version consistency** — Synchronized all displayed version strings to `v2.0` across homepage badge, footer, workspace sidebar, and backend route docstrings; bumped package metadata to `2.0.1`
+- **Workspace dashboard route** — Created the missing `/workspace` page with stats cards, recent rockets/simulations/reports, and quick actions
+- **Validation endpoint** — Confirmed `/api/validation/endpoints` was never registered; proper 404 returned by default FastAPI routing — no action required
+- **Test assertions** — Updated health check version assertions in test suite to match `2.0.1`
+
 ## [2.0.0] - 2026-07-22
 
 ### Added
