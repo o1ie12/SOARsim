@@ -143,7 +143,11 @@ export type RocketDesignerAction =
   | { type: "LOAD_DESIGN"; payload: RocketDesignState }
   | { type: "RESET_TO_DEFAULT" }
   | { type: "UNDO" }
-  | { type: "REDO" };
+  | { type: "REDO" }
+  | { type: "SELECT_COMPONENT"; payload: string | null }
+  | { type: "SET_GRID_ENABLED"; payload: boolean }
+  | { type: "SET_SNAP_TO_GRID"; payload: boolean }
+  | { type: "SET_GRID_SPACING"; payload: number };
 
 export interface RocketDesignerState {
   current: RocketDesignState;
@@ -158,6 +162,12 @@ export interface DragState {
   property: string;
   startValue: number;
   startMouseY: number;
+}
+
+export interface CanvasViewState {
+  zoom: number;
+  panX: number;
+  panY: number;
 }
 
 // ── Preset Designs ───────────────────────────────────────────────

@@ -22,11 +22,18 @@ import { createDefaultDesign, calculateRocketProperties, validateDesign } from "
 
 // ── History State ────────────────────────────────────────────────
 
+interface DesignerView {
+  selectedComponent: string | null;
+  gridEnabled: boolean;
+  snapToGrid: boolean;
+  gridSpacing: number; // pixels
+}
+
 interface DesignerHistory {
   current: RocketDesignState;
   past: RocketDesignState[];
   future: RocketDesignState[];
-  selectedComponent: string | null;
+  view: DesignerView;
 }
 
 // ── Reducer ──────────────────────────────────────────────────────
@@ -268,6 +275,42 @@ function rocketReducer(
       };
     }
 
+    case "SELECT_COMPONENT":
+      return {
+        ...state,
+        view: {
+          ...state.view,
+          selectedComponent: action.payload,
+        },
+      };
+
+    case "SET_GRID_ENABLED":
+      return {
+        ...state,
+        view: {
+          ...state.view,
+          gridEnabled: action.payload,
+        },
+      };
+
+    case "SET_SNAP_TO_GRID":
+      return {
+        ...state,
+        view: {
+          ...state.view,
+          snapToGrid: action.payload,
+        },
+      };
+
+    case "SET_GRID_SPACING":
+      return {
+        ...state,
+        view: {
+          ...state.view,
+          gridSpacing: action.payload,
+        },
+      };
+
     default:
       return state;
   }
@@ -284,6 +327,10 @@ interface RocketDesignerContextType {
   canRedo: boolean;
   undo: () => void;
   redo: () => void;
+  selectedComponent: string | null;
+  gridEnabled: boolean;
+  snapToGrid: boolean;
+  gridSpacing: number;
 }
 
 const RocketDesignerContext = createContext<RocketDesignerContextType | null>(null);
@@ -295,7 +342,12 @@ export function RocketDesignerProvider({ children }: { children: ReactNode }) {
     current: createDefaultDesign(),
     past: [],
     future: [],
-    selectedComponent: null,
+    view: {
+      selectedComponent: null,
+      gridEnabled: true,
+      snapToGrid: false,
+      gridSpacing: 20,
+    },
   }));
 
   const calculations = calculateRocketProperties(state.current);
@@ -318,6 +370,10 @@ export function RocketDesignerProvider({ children }: { children: ReactNode }) {
         canRedo,
         undo,
         redo,
+        selectedComponent: state.view.selectedComponent,
+        gridEnabled: state.view.gridEnabled,
+        snapToGrid: state.view.snapToGrid,
+        gridSpacing: state.view.gridSpacing,
       }}
     >
       {children}
