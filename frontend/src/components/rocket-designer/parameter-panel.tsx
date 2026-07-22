@@ -194,6 +194,11 @@ function ParameterSection({
     [dispatch],
   );
 
+  const { calculations } = useRocketDesigner();
+
+  // Compute overall length for the Geometry section
+  const isGeometrySection = fields.some((f) => f.key === "noseLength");
+
   return (
     <Card className="border-border/60 shadow-sm">
       <CardHeader className="pb-3">
@@ -203,6 +208,14 @@ function ParameterSection({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
+        {isGeometrySection && (
+          <div className="flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2">
+            <span className="text-sm text-muted-foreground">Overall Length</span>
+            <span className="text-sm font-mono font-medium tabular-nums">
+              {(calculations.totalLength * 1000).toFixed(0)} mm
+            </span>
+          </div>
+        )}
         {fields.map((field) => (
           <NumericInput
             key={field.key}
