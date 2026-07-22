@@ -1,0 +1,88 @@
+# ===========================
+# SOARSim Root .gitignore
+# ===========================
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy / ruff / linting
+.mypy_cache/
+.ruff_cache/
+
+# ---------- Node.js / Frontend ----------
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Next.js
+.next/
+out/
+.vercel
+
+# Testing / Coverage
+coverage/
+
+# Build output
+build/
+
+# ---------- IDE / Editor ----------
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# ---------- OS ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- Environment ----------
+.env
+.env.local
+.env.*.local
+
+# ---------- Debug / Logs ----------
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.log
+
+# ---------- Agent / IDE Configs ----------
+AGENTS.md
+CLAUDE.md
+
+# ---------- Freebuff Desktop ----------
+.freebuff/
+
+# ---------- Misc ----------
+*.pem
+*.tsbuildinfo
+next-env.d.ts
