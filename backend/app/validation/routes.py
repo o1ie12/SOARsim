@@ -1,4 +1,4 @@
-"""Validation API routes for SOARSim v1.0.
+"""Validation API routes for SOARSim v2.0.
 
 Provides REST endpoints for:
     - Uploading and managing real flight data

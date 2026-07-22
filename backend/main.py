@@ -18,7 +18,7 @@ from app.analysis.routes import router as analysis_router
 app = FastAPI(
     title="SOARSim API",
     description="Physics-Based Rocket Flight Simulator — Backend API",
-    version="2.0.0",
+    version="2.0.1",
 )
 
 # Allow cross-origin requests from the frontend development server
@@ -47,4 +47,4 @@ async def health_check() -> dict:
     Returns:
         A simple status response indicating the API is running.
     """
-    return {"status": "healthy", "version": "2.0.0"}
+    return {"status": "healthy", "version": "2.0.1"}

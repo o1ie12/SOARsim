@@ -1,4 +1,4 @@
-"""Workspace API routes for SOARSim v1.0.
+"""Workspace API routes for SOARSim v2.0.
 
 Provides REST endpoints for:
     - Rocket library CRUD (create, read, update, delete, duplicate, search)

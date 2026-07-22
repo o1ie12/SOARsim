@@ -1,4 +1,4 @@
-"""API routes for SOARSim v1.0.
+"""API routes for SOARSim v2.0.
 
 Provides the REST endpoints for running rocket simulations.
 Uses modular propulsion with water rocket physics.

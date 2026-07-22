@@ -1,7 +1,7 @@
 """
-Pydantic schemas for SOARSim v0.3 validation API.
+Pydantic schemas for SOARSim v2.0 validation API.
 
-Extends v0.2 schemas with validation-specific request/response models.
+Extends v2.0 schemas with validation-specific request/response models.
 All fields use camelCase for frontend compatibility.
 """
 

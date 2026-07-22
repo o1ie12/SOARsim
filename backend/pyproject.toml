@@ -1,6 +1,6 @@
 [project]
 name = "soarsim-backend"
-version = "0.1.0"
+version = "2.0.1"
 description = "Physics-Based Rocket Flight Simulator — Backend API"
 requires-python = ">=3.11"
 dependencies = [
