@@ -1,4 +1,4 @@
-# SOARSim 🚀
+# SOARSim
 
 **Comprehensive Engineering Analysis Platform for Rocket Design**
 
@@ -11,7 +11,7 @@ SOARSim is a web-based engineering platform for designing rockets, simulating fl
 
 ## Features
 
-### 🎯 Simulation & Physics
+### Simulation & Physics
 - **Water Rocket Propulsion** — Isothermal expansion model with accurate thrust, mass flow, and pressure dynamics
 - **Solid Motor Propulsion** — Commercial Estes motors (A8 through F15) with built-in thrust curves
 - **Custom Thrust Curves** — CSV import for user-defined thrust profiles
@@ -20,14 +20,14 @@ SOARSim is a web-based engineering platform for designing rockets, simulating fl
 - **Wind Model** — Constant, layered, and altitude-varying wind profiles
 - **Advanced Aerodynamics** — Mach-dependent drag, multiple nose cone types, fin drag
 
-### 📊 Analysis & Visualization
+### Analysis & Visualization
 - **Parameter Sweeps** — Vary one parameter across multiple simulations with automatic comparison plots
 - **Monte Carlo Analysis** — Run hundreds of simulations with random perturbations to quantify uncertainty
 - **Design of Experiments** — Full factorial experiments testing every parameter combination
 - **Engineering Dashboard** — Dynamic pressure, Mach number, energy, and impulse visualization
 - **Real-time Trajectory Visualization** — Interactive charts powered by Recharts
 
-### 🛠️ Engineering Workspace
+### Engineering Workspace
 - **Rocket Designer** — Visual rocket builder with parametric design
 - **Validation Framework** — Compare simulation predictions against real flight data
 - **Project Management** — Save, organize, and compare rocket designs
