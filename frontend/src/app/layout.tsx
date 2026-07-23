@@ -13,10 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SOARSim — Physics-Based Rocket Flight Simulator",
+  title: "SOAR Studio — Physics-Based Rocket Flight Simulator",
   description:
-    "Design rockets, simulate flights, and analyze trajectories with SOARSim — an open-source educational rocketry platform.",
-  keywords: ["rocket", "simulation", "physics", "education", "trajectory"],
+    "Design rockets, simulate flights, and analyze trajectories with SOAR Studio — an open-source educational rocketry platform.",
+  keywords: ["rocket", "simulation", "physics", "education", "trajectory", "SOAR Studio"],
 };
 
 export default function RootLayout({

@@ -1,5 +1,5 @@
 /**
- * SOARSim Rocket Designer — Preset Designs
+ * SOAR Studio — Rocket Designer Presets
  *
  * Three sample rockets demonstrating different configurations.
  * Presets are deep-copied when selected to avoid mutation.

@@ -1,5 +1,5 @@
 /**
- * SOARSim Rocket Designer Types
+ * SOAR Studio — Rocket Designer Types
  *
  * Defines the complete data model for the visual rocket designer.
  * Separated from rendering, physics, and state management.
@@ -147,7 +147,8 @@ export type RocketDesignerAction =
   | { type: "SELECT_COMPONENT"; payload: string | null }
   | { type: "SET_GRID_ENABLED"; payload: boolean }
   | { type: "SET_SNAP_TO_GRID"; payload: boolean }
-  | { type: "SET_GRID_SPACING"; payload: number };
+  | { type: "SET_GRID_SPACING"; payload: number }
+  | { type: "SET_UNIT_SYSTEM"; payload: "metric" | "imperial" };
 
 export interface RocketDesignerState {
   current: RocketDesignState;
@@ -183,3 +184,7 @@ export interface RocketPreset {
 export function generateId(): string {
   return `rocket_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 }
+
+// ── Unit System ──────────────────────────────────────────────────
+
+export type UnitSystem = "metric" | "imperial";

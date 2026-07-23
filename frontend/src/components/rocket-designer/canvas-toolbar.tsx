@@ -1,5 +1,5 @@
 /**
- * SOARSim Rocket Designer — Canvas Toolbar
+ * SOAR Studio — Rocket Designer Canvas Toolbar
  *
  * Overlay toolbar for zoom, pan, grid, and view controls.
  * Lives above the canvas as a floating row of buttons.

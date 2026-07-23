@@ -1,13 +1,13 @@
 /**
- * SOARSim Rocket Designer State Management
+ * SOAR Studio — Rocket Designer State Management
  *
  * React Context + useReducer with undo/redo support.
- * All state changes go through the reducer for predictability.
+ * v2.3: Integrates engineering module for live calculations.
  */
 
 "use client";
 
-import React, { createContext, useContext, useReducer, useCallback, type ReactNode } from "react";
+import React, { createContext, useContext, useReducer, useCallback, useMemo, type ReactNode } from "react";
 import type {
   RocketDesignState,
   RocketDesignerAction,
@@ -17,8 +17,14 @@ import type {
   FinGeometry,
   NozzleGeometry,
   RecoveryGeometry,
+  UnitSystem,
 } from "@/lib/rocket-designer-types";
 import { createDefaultDesign, calculateRocketProperties, validateDesign } from "@/lib/rocket-geometry";
+import { calculateEngineeringProperties, type EngineeringProperties } from "@/lib/engineering/properties";
+import { calculateCG, type CGProperties } from "@/lib/engineering/cg";
+import { calculateCP, type CPProperties } from "@/lib/engineering/cp";
+import { calculateStability, type StabilityProperties } from "@/lib/engineering/stability";
+import { generateRecommendations, type StabilityRecommendation } from "@/lib/engineering/recommendations";
 
 // ── History State ────────────────────────────────────────────────
 
@@ -27,6 +33,7 @@ interface DesignerView {
   gridEnabled: boolean;
   snapToGrid: boolean;
   gridSpacing: number; // pixels
+  unitSystem: UnitSystem;
 }
 
 interface DesignerHistory {
@@ -311,6 +318,15 @@ function rocketReducer(
         },
       };
 
+    case "SET_UNIT_SYSTEM":
+      return {
+        ...state,
+        view: {
+          ...state.view,
+          unitSystem: action.payload,
+        },
+      };
+
     default:
       return state;
   }
@@ -321,6 +337,7 @@ function rocketReducer(
 interface RocketDesignerContextType {
   state: DesignerHistory;
   calculations: ReturnType<typeof calculateRocketProperties>;
+  engineering: EngineeringProperties;
   warnings: ReturnType<typeof validateDesign>;
   dispatch: React.Dispatch<RocketDesignerAction>;
   canUndo: boolean;
@@ -331,6 +348,12 @@ interface RocketDesignerContextType {
   gridEnabled: boolean;
   snapToGrid: boolean;
   gridSpacing: number;
+  unitSystem: UnitSystem;
+  // v2.4: Stability data
+  cg: CGProperties;
+  cp: CPProperties;
+  stability: StabilityProperties;
+  stabilityRecommendations: StabilityRecommendation[];
 }
 
 const RocketDesignerContext = createContext<RocketDesignerContextType | null>(null);
@@ -347,11 +370,13 @@ export function RocketDesignerProvider({ children }: { children: ReactNode }) {
       gridEnabled: true,
       snapToGrid: false,
       gridSpacing: 20,
+      unitSystem: "metric" as UnitSystem,
     },
   }));
 
-  const calculations = calculateRocketProperties(state.current);
-  const warnings = validateDesign(state.current);
+  const calculations = useMemo(() => calculateRocketProperties(state.current), [state.current]);
+  const engineering = useMemo(() => calculateEngineeringProperties(state.current), [state.current]);
+  const warnings = useMemo(() => validateDesign(state.current), [state.current]);
 
   const canUndo = state.past.length > 0;
   const canRedo = state.future.length > 0;
@@ -359,11 +384,18 @@ export function RocketDesignerProvider({ children }: { children: ReactNode }) {
   const undo = useCallback(() => dispatch({ type: "UNDO" }), []);
   const redo = useCallback(() => dispatch({ type: "REDO" }), []);
 
+  // v2.4: Derived stability properties
+  const cg = engineering.cg;
+  const cp = engineering.cp;
+  const stability = engineering.stability;
+  const stabilityRecommendations = engineering.stabilityRecommendations;
+
   return (
     <RocketDesignerContext.Provider
       value={{
         state,
         calculations,
+        engineering,
         warnings,
         dispatch,
         canUndo,
@@ -374,6 +406,11 @@ export function RocketDesignerProvider({ children }: { children: ReactNode }) {
         gridEnabled: state.view.gridEnabled,
         snapToGrid: state.view.snapToGrid,
         gridSpacing: state.view.gridSpacing,
+        unitSystem: state.view.unitSystem,
+        cg,
+        cp,
+        stability,
+        stabilityRecommendations,
       }}
     >
       {children}

@@ -107,27 +107,32 @@ function computeExtendedMetrics(
   summary: SimulationSummary,
   trajectory?: Array<{ thrust?: number; pressure?: number; waterRemaining?: number; x?: number }>
 ): ExtendedMetrics {
-  // Compute derived metrics from trajectory if available
-  let maxThrust = 0;
-  let maxDynamicPressure = 0;
+  // v2.5: Use extended backend fields where available, fall back to derivation
+  let maxThrust = summary.totalImpulse > 0 && summary.specificImpulse > 0
+    ? 0 // Don't use impulse alone — compute from trajectory
+    : 0;
   let propellantUsed = 0;
-  let landingDistance = 0;
+  let landingDistance: number;
 
+  // Trajectory-derived metrics
   if (trajectory && trajectory.length > 0) {
-    for (const point of trajectory) {
-      if (point.thrust && point.thrust > maxThrust) maxThrust = point.thrust;
-      // Dynamic pressure approximation: q = 0.5 * rho * v^2
-      // Using simplified estimate based on altitude
-    }
+    // Max thrust from trajectory
+    maxThrust = Math.max(...trajectory.filter(p => p.thrust).map(p => p.thrust ?? 0));
+
     const lastPoint = trajectory[trajectory.length - 1];
-    if (lastPoint.x !== undefined) landingDistance = Math.abs(lastPoint.x);
+    landingDistance = lastPoint.x !== undefined ? Math.abs(lastPoint.x) : summary.landingDistance;
+
     if (trajectory[0].waterRemaining !== undefined) {
       propellantUsed = (1 - (lastPoint.waterRemaining ?? 0)) * 100;
     }
+  } else {
+    landingDistance = summary.landingDistance;
   }
 
-  // Estimate max dynamic pressure (simplified)
-  maxDynamicPressure = 0.5 * 1.225 * summary.maxVelocity * summary.maxVelocity * 0.008 * 0.45;
+  // Use backend maxDynamicPressure if available, otherwise estimate
+  const maxDynamicPressure = summary.maxDynamicPressure > 0
+    ? summary.maxDynamicPressure
+    : 0.5 * 1.225 * summary.maxVelocity * summary.maxVelocity * 0.008 * 0.45;
 
   return {
     maxAltitude: summary.maxAltitude,

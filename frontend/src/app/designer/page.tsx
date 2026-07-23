@@ -1,12 +1,14 @@
 /**
- * SOARSim Rocket Designer — Page (v2.2)
+ * SOAR Studio — Rocket Designer (v2.4)
  *
- * Two-column layout with interactive editing:
- *   LEFT:  Rocket SVG + Canvas Toolbar + presets
+ * Two-column layout with interactive editing + engineering panel:
+ *   LEFT:  Rocket SVG + Canvas Toolbar + presets + Engineering Panel
  *   RIGHT: Selection Panel + Parameter Panel
  *
- * Single source of truth: the RocketDesignerContext.
- * Keyboard shortcuts: Ctrl+Z (undo), Ctrl+Shift+Z (redo), Escape (deselect)
+ * v2.3: Added Engineering Properties Panel with live calculations,
+ * mass breakdown, engineering summary, warnings, and unit switching.
+ * v2.4: Added Stability analysis — CG, CP, stability margin, markers,
+ * recommendations, and stability explainer. All calculations update live.
  */
 
 "use client";
@@ -111,12 +113,12 @@ function DesignerInner() {
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-6">
           <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
             <span className="h-2.5 w-2.5 rounded-full bg-orange-500" />
-            <span className="text-base font-bold tracking-tight">SOARSim</span>
+            <span className="text-base font-bold tracking-tight">SOAR Studio</span>
           </Link>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <PenLine className="h-3.5 w-3.5" />
             Rocket Designer
-            <span className="ml-2 rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">v2.2</span>
+            <span className="ml-2 rounded bg-muted px-1.5 py-0.5 font-mono text-[10px]">v2.4</span>
           </div>
         </div>
       </header>

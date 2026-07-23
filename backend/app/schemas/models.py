@@ -57,6 +57,11 @@ class TrajectoryPoint(CamelCaseModel):
     mass: float
     pressure: float
     waterRemaining: float
+    machNumber: float = 0.0
+    dynamicPressure: float = 0.0
+    totalEnergy: float = 0.0
+    kineticEnergy: float = 0.0
+    potentialEnergy: float = 0.0
 
 
 class SimulationSummary(CamelCaseModel):
@@ -64,6 +69,15 @@ class SimulationSummary(CamelCaseModel):
     flightTime: float
     maxVelocity: float
     maxAcceleration: float
+    maxMach: float = 0.0
+    maxDynamicPressure: float = 0.0
+    totalImpulse: float = 0.0
+    specificImpulse: float = 0.0
+    maxKineticEnergy: float = 0.0
+    maxPotentialEnergy: float = 0.0
+    landingDistance: float = 0.0
+    landingX: float = 0.0
+    landingY: float = 0.0
 
 
 class SimulateResponse(CamelCaseModel):

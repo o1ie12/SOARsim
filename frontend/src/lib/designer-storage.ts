@@ -1,9 +1,8 @@
 /**
- * SOARSim Rocket Designer — Local Storage Persistence
+ * SOAR Studio — Rocket Designer Local Storage
  *
  * Saves and loads rocket designs from localStorage.
- * For v2.1 this is the only persistence mechanism.
- * No workspace backend is involved.
+ * Uses the soarsim_rocket_designer key for persistence.
  */
 
 import type { RocketDesignState } from "@/lib/rocket-designer-types";

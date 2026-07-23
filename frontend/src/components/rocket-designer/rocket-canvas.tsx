@@ -1,9 +1,8 @@
 /**
- * SOARSim Rocket Designer — Interactive Rocket Canvas
+ * SOAR Studio — Rocket Designer Canvas (v2.3)
  *
- * v2.2: Adds selection, drag handles, dimension labels, grid overlay,
- * zoom/pan. The SVG is always generated from the model (one source of truth).
- * Zoom and pan are local canvas state to avoid unnecessary re-renders.
+ * Interactive SVG rocket canvas with selection, drag handles, dimension labels,
+ * grid overlay, zoom/pan. SVG is always generated from the model.
  */
 
 "use client";

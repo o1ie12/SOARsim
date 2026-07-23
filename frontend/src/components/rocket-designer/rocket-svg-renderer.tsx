@@ -1,8 +1,9 @@
 /**
- * SOARSim Rocket SVG Renderer
+ * SOAR Studio — Rocket SVG Renderer
  *
  * Renders a scalable 2D rocket using SVG.
  * Supports direct manipulation via drag handles.
+ * v2.4: Overlays CG (blue) and CP (red) markers with stability margin line.
  */
 
 "use client";
@@ -30,6 +31,9 @@ const COLORS = {
   handleHover: "#ea580c", // orange-600
   grid: "#f3f4f6", // gray-100
   background: "#ffffff",
+  cgMarker: "#3b82f6", // blue
+  cpMarker: "#ef4444", // red
+  stabilityLine: "#f59e0b", // amber
 };
 
 // ── Drag Handle ──────────────────────────────────────────────────
@@ -73,10 +77,143 @@ function DragHandle({ cx, cy, label, onDragStart }: DragHandleProps) {
   );
 }
 
+// ── Stability Markers ────────────────────────────────────────────
+
+function StabilityMarkers({
+  cgY,
+  cpY,
+  centerX,
+  isStable,
+}: {
+  cgY: number;
+  cpY: number;
+  centerX: number;
+  isStable: boolean;
+}) {
+  const markerRadius = 5;
+  const lineHeight = 60;
+
+  return (
+    <g>
+      {/* Dashed line between CG and CP */}
+      <line
+        x1={centerX - 30}
+        y1={cgY}
+        x2={centerX - 30}
+        y2={cpY}
+        stroke={isStable ? "#22c55e" : COLORS.stabilityLine}
+        strokeWidth={2}
+        strokeDasharray="4,3"
+        opacity={0.7}
+      />
+
+      {/* CG Marker (blue) */}
+      <g>
+        <line
+          x1={centerX - 50}
+          y1={cgY}
+          x2={centerX + 50}
+          y2={cgY}
+          stroke={COLORS.cgMarker}
+          strokeWidth={2.5}
+          opacity={0.9}
+        />
+        <circle
+          cx={centerX - 30}
+          cy={cgY}
+          r={markerRadius}
+          fill={COLORS.cgMarker}
+          stroke="#ffffff"
+          strokeWidth={1.5}
+        />
+        <text
+          x={centerX - 30}
+          y={cgY - lineHeight}
+          textAnchor="middle"
+          fontSize={11}
+          fontWeight="bold"
+          fill={COLORS.cgMarker}
+          fontFamily="monospace"
+        >
+          CG
+        </text>
+        <line
+          x1={centerX - 30}
+          y1={cgY - markerRadius - 2}
+          x2={centerX - 30}
+          y2={cgY - lineHeight + 14}
+          stroke={COLORS.cgMarker}
+          strokeWidth={1.5}
+          strokeDasharray="3,2"
+          opacity={0.6}
+        />
+      </g>
+
+      {/* CP Marker (red) */}
+      <g>
+        <line
+          x1={centerX - 50}
+          y1={cpY}
+          x2={centerX + 50}
+          y2={cpY}
+          stroke={COLORS.cpMarker}
+          strokeWidth={2.5}
+          opacity={0.9}
+        />
+        <circle
+          cx={centerX + 30}
+          cy={cpY}
+          r={markerRadius}
+          fill={COLORS.cpMarker}
+          stroke="#ffffff"
+          strokeWidth={1.5}
+        />
+        <text
+          x={centerX + 30}
+          y={cpY - lineHeight}
+          textAnchor="middle"
+          fontSize={11}
+          fontWeight="bold"
+          fill={COLORS.cpMarker}
+          fontFamily="monospace"
+        >
+          CP
+        </text>
+        <line
+          x1={centerX + 30}
+          y1={cpY - markerRadius - 2}
+          x2={centerX + 30}
+          y2={cpY - lineHeight + 14}
+          stroke={COLORS.cpMarker}
+          strokeWidth={1.5}
+          strokeDasharray="3,2"
+          opacity={0.6}
+        />
+      </g>
+
+      {/* Stability margin label */}
+      {(cgY !== cpY) && (
+        <text
+          x={centerX - 30}
+          y={(cgY + cpY) / 2}
+          textAnchor="end"
+          fontSize={9}
+          fill={isStable ? "#22c55e" : COLORS.stabilityLine}
+          fontFamily="monospace"
+          transform={`translate(-8, 0)`}
+          dominantBaseline="middle"
+        >
+          {isStable ? "↕" : "⚠"}
+        </text>
+      )}
+    </g>
+  );
+}
+
 // ── Main Renderer ────────────────────────────────────────────────
 
 export default function RocketSVGRenderer() {
-  const { state, dispatch, calculations, warnings } = useRocketDesigner();
+  const { state, dispatch, calculations, warnings, cg, cp, stability } = useRocketDesigner();
   const { current: design } = state;
   const svgRef = useRef<SVGSVGElement>(null);
   const [dragging, setDragging] = useState<{
@@ -128,6 +265,11 @@ export default function RocketSVGRenderer() {
   const nozzleBottom = y + nozzleLengthPx;
 
   const totalHeightPx = nozzleBottom - noseTop + PADDING * 2;
+
+  // CG and CP positions in pixels (from top of SVG = nose tip)
+  // cgFromNose is distance from nose tip, cpFromNose is distance from nose tip
+  const cgYPx = noseTop + cg.cgFromNose * SCALE;
+  const cpYPx = noseTop + cp.cpFromNose * SCALE;
 
   // Error handling
   const hasErrors = warnings.some((w) => w.type === "error");
@@ -201,6 +343,17 @@ export default function RocketSVGRenderer() {
   const handleMouseUp = useCallback(() => {
     setDragging(null);
   }, []);
+
+  // Check if CG/CP are within visible bounds
+  const showStabilityMarkers = cg.cgFromNose >= 0 && cp.cpFromNose >= 0 &&
+    !isNaN(cgYPx) && !isNaN(cpYPx) &&
+    cgYPx >= noseTop && cpYPx >= noseTop &&
+    cgYPx <= nozzleBottom && cpYPx <= nozzleBottom;
+
+  // Determine which labels to show
+  const totalLengthMm = (calculations.totalLength * 1000).toFixed(0);
+  const bodyDiamMm = (calculations.bodyDiameter * 1000).toFixed(0);
+  const massG = (calculations.totalMass * 1000).toFixed(0);
 
   return (
     <div className="relative flex flex-col items-center">
@@ -326,6 +479,16 @@ export default function RocketSVGRenderer() {
           </g>
         )}
 
+        {/* CG / CP Stability Markers */}
+        {showStabilityMarkers && (
+          <StabilityMarkers
+            cgY={cgYPx}
+            cpY={cpYPx}
+            centerX={centerX}
+            isStable={stability.isStable}
+          />
+        )}
+
         {/* Drag Handles */}
         <DragHandle
           cx={centerX + bodyDiameterPx / 2 + 20}
@@ -371,12 +534,25 @@ export default function RocketSVGRenderer() {
         />
       </svg>
 
-      {/* Dimension Labels */}
+      {/* Dimension Labels + Stability Status */}
       <div className="mt-4 flex flex-wrap justify-center gap-4 text-xs text-muted-foreground">
-        <span>Total: {(calculations.totalLength * 1000).toFixed(0)}mm</span>
-        <span>Body: ⌀{(calculations.bodyDiameter * 1000).toFixed(0)}mm</span>
-        <span>Mass: {(calculations.totalMass * 1000).toFixed(0)}g</span>
+        <span>Total: {totalLengthMm}mm</span>
+        <span>Body: ⌀{bodyDiamMm}mm</span>
+        <span>Mass: {massG}g</span>
         <span>Fineness: {calculations.aspectRatio.toFixed(1)}</span>
+        <span>
+          SM:{" "}
+          <span
+            className={`font-mono font-medium ${
+              stability.marginCalibers >= 1 ? "text-emerald-500" :
+              stability.marginCalibers >= 0.5 ? "text-amber-500" :
+              "text-red-500"
+            }`}
+          >
+            {stability.marginCalibers.toFixed(2)}
+          </span>{" "}
+          cal
+        </span>
       </div>
     </div>
   );

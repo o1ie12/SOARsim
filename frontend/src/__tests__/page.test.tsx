@@ -3,9 +3,9 @@ import { render, screen } from "@testing-library/react";
 import Page from "@/app/page";
 
 describe("Landing Page", () => {
-  it("renders the SOARSim heading in the hero", () => {
+  it("renders the SOAR Studio heading in the hero", () => {
     render(<Page />);
-    const headings = screen.getAllByText("SOARSim");
+    const headings = screen.getAllByText("SOAR Studio");
     // Should appear at least twice: in nav and as the main h1
     expect(headings.length).toBeGreaterThanOrEqual(2);
   });

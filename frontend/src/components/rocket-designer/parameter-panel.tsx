@@ -1,5 +1,5 @@
 /**
- * SOARSim Rocket Designer — Parameter Panel
+ * SOAR Studio — Rocket Designer Parameter Panel
  *
  * Grouped cards with inline-validated numeric inputs.
  * Every change dispatches to the rocket model, which immediately

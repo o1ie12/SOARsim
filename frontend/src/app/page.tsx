@@ -74,9 +74,9 @@ export default function Home() {
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
           <div className="flex items-center gap-2">
             <span className="h-2.5 w-2.5 rounded-full bg-orange-500 animate-pulse" />
-            <span className="text-lg font-bold tracking-tight">SOARSim</span>
+            <span className="text-lg font-bold tracking-tight">SOAR Studio</span>
             <span className="ml-2 rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-              v2.0
+              v2.3
             </span>
           </div>
           <nav className="hidden md:flex items-center gap-6">
@@ -119,7 +119,7 @@ export default function Home() {
           </div>
 
           <h1 className="text-5xl font-bold leading-[1.1] tracking-tight sm:text-6xl md:text-7xl">
-            SOARSim
+            SOAR Studio
           </h1>
 
           <p className="mt-6 text-lg text-muted-foreground sm:text-xl">
@@ -229,7 +229,7 @@ export default function Home() {
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold tracking-tight">Open Source</h2>
           <p className="mt-4 text-muted-foreground">
-            SOARSim is free and open-source under the MIT license. Contributions are welcome.
+            SOAR Studio is free and open-source under the MIT license. Contributions are welcome.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
@@ -258,7 +258,7 @@ export default function Home() {
         <div className="mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-orange-500" />
-            <span className="text-sm font-semibold">SOARSim v2.0</span>
+            <span className="text-sm font-semibold">SOAR Studio v2.3</span>
           </div>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
             <a href="https://github.com/o1ie12/SOARsim" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>

@@ -24,6 +24,7 @@ const NAV_ITEMS = [
   { href: "/workspace/simulations", label: "Simulation History", icon: GitCompareArrows },
   { href: "/workspace/validations", label: "Validation History", icon: BarChart3 },
   { href: "/workspace/reports", label: "Reports", icon: FileText },
+  { href: "/compare", label: "Compare Designs", icon: GitCompareArrows },
 ];
 
 export default function WorkspaceLayout({
@@ -66,7 +67,7 @@ export default function WorkspaceLayout({
         <div className="flex h-16 items-center gap-2 border-b border-border/40 px-6">
           <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
             <span className="h-2.5 w-2.5 rounded-full bg-orange-500 animate-pulse" />
-            <span className="text-lg font-bold tracking-tight">SOARSim</span>
+            <span className="text-lg font-bold tracking-tight">SOAR Studio</span>
           </Link>
           <span className="ml-auto rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
             v2.0

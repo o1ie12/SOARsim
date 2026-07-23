@@ -222,8 +222,10 @@ describe("Validation", () => {
     const d = createDefaultDesign();
     d.waterVolume = 0.003; // 3L when bottle is 2L
     const warnings = validateDesign(d);
-    // This is caught by waterFillPercentage logic — check fill > 60%
-    const waterWarnings = warnings.filter((w) => w.message.includes("fill"));
+    // Water exceeds bottle capacity triggers error message
+    const waterWarnings = warnings.filter((w) =>
+      w.message.includes("exceeds bottle capacity")
+    );
     expect(waterWarnings.length).toBeGreaterThanOrEqual(1);
   });
 
@@ -260,9 +262,11 @@ describe("Validation", () => {
     d.bodyTube.geometry.length = 2.0;
     d.bodyTube.geometry.outerDiameter = 0.05;
     const calc = calculateRocketProperties(d);
-    // Aspect ratio > 10 should trigger warning
+    // Aspect ratio > 15 should trigger warning
     const warnings = validateDesign(d);
-    const aspectWarnings = warnings.filter((w) => w.message.toLowerCase().includes("fineness"));
+    const aspectWarnings = warnings.filter((w) =>
+      w.message.toLowerCase().includes("aspect")
+    );
     expect(aspectWarnings.length).toBeGreaterThanOrEqual(1);
   });
 });

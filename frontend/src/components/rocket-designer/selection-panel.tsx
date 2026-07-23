@@ -1,5 +1,5 @@
 /**
- * SOARSim Rocket Designer — Selection Panel
+ * SOAR Studio — Rocket Designer Selection Panel
  *
  * When a component is selected on the canvas, this panel shows
  * only the relevant parameters for that component.

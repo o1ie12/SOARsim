@@ -46,6 +46,12 @@ export interface TrajectoryPoint {
   mass: number;
   pressure: number;
   waterRemaining: number;
+  // v2.5: Extended fields
+  machNumber?: number;
+  dynamicPressure?: number;
+  totalEnergy?: number;
+  kineticEnergy?: number;
+  potentialEnergy?: number;
 }
 
 export interface SimulationSummary {
@@ -53,6 +59,16 @@ export interface SimulationSummary {
   flightTime: number;
   maxVelocity: number;
   maxAcceleration: number;
+  // v2.5: Extended fields
+  maxMach: number;
+  maxDynamicPressure: number;
+  totalImpulse: number;
+  specificImpulse: number;
+  maxKineticEnergy: number;
+  maxPotentialEnergy: number;
+  landingDistance: number;
+  landingX: number;
+  landingY: number;
 }
 
 export interface SimulateResponse {

@@ -9,7 +9,7 @@ from fastapi import APIRouter, HTTPException
 from app.physics.engine import RocketConfig
 from app.physics.propulsion.water_rocket import WaterRocket, WaterRocketConfig
 from app.schemas.models import SimulateRequest, SimulateResponse
-from app.simulation.simulator import run_simulation
+from app.simulation.simulator_v2 import run_simulation_v2
 
 router = APIRouter(prefix="/api", tags=["simulation"])
 
@@ -53,8 +53,8 @@ async def simulate(request: SimulateRequest) -> SimulateResponse:
             launch_angle=request.launch.angle,
         )
 
-        # Run the simulation
-        result = run_simulation(rocket_config, propulsion)
+        # Run the simulation (v2.5: using v2 simulator for extended trajectory fields)
+        result = run_simulation_v2(rocket_config, propulsion)
 
         # Convert to response model
         return SimulateResponse(
@@ -63,6 +63,15 @@ async def simulate(request: SimulateRequest) -> SimulateResponse:
                 "flightTime": result.summary.flight_time,
                 "maxVelocity": result.summary.max_velocity,
                 "maxAcceleration": result.summary.max_acceleration,
+                "maxMach": result.summary.max_mach,
+                "maxDynamicPressure": result.summary.max_dynamic_pressure,
+                "totalImpulse": result.summary.total_impulse,
+                "specificImpulse": result.summary.specific_impulse,
+                "maxKineticEnergy": result.summary.max_kinetic_energy,
+                "maxPotentialEnergy": result.summary.max_potential_energy,
+                "landingDistance": result.summary.landing_distance,
+                "landingX": result.summary.landing_x,
+                "landingY": result.summary.landing_y,
             },
             trajectory=[
                 {
@@ -77,6 +86,11 @@ async def simulate(request: SimulateRequest) -> SimulateResponse:
                     "mass": p.mass,
                     "pressure": p.pressure,
                     "waterRemaining": p.water_remaining,
+                    "machNumber": p.mach_number,
+                    "dynamicPressure": p.dynamic_pressure,
+                    "totalEnergy": p.total_energy,
+                    "kineticEnergy": p.kinetic_energy,
+                    "potentialEnergy": p.potential_energy,
                 }
                 for p in result.trajectory
             ],
