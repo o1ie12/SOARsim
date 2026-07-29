@@ -15,8 +15,9 @@ services:
     env: python
     region: oregon
     plan: free
-    buildCommand: cd backend && pip install -r requirements.txt
-    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
       - key: PYTHONUNBUFFERED
@@ -32,14 +33,9 @@ services:
     env: node
     region: oregon
     plan: free
-    # Next.js 16 standalone build — must copy static assets into standalone dir
-    buildCommand: >
-      cd frontend &&
-      npm ci &&
-      npm run build &&
-      cp -r public .next/standalone/public &&
-      cp -r .next/static .next/standalone/.next/static
-    startCommand: cd frontend && node .next/standalone/server.js
+    rootDir: frontend
+    buildCommand: npm ci && npm run build && cp -r public .next/standalone/public && cp -r .next/static .next/standalone/.next/static
+    startCommand: node .next/standalone/server.js
     envVars:
       - key: NEXT_PUBLIC_API_URL
         fromService:
