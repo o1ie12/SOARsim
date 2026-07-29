@@ -12,7 +12,7 @@ services:
   # ── Backend: FastAPI physics engine ──────────────────────────────
   - type: web
     name: soarsim-backend
-    env: python
+    runtime: python
     region: oregon
     plan: free
     rootDir: backend
@@ -30,7 +30,7 @@ services:
   # ── Frontend: Next.js UI ────────────────────────────────────────
   - type: web
     name: soarsim-frontend
-    env: node
+    runtime: node
     region: oregon
     plan: free
     rootDir: frontend
