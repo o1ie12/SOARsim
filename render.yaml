@@ -41,10 +41,11 @@ services:
       # which browsers cannot reach. We use the public URL instead.
       - key: NEXT_PUBLIC_API_URL
         value: https://soarsim-backend.onrender.com
+      # Do NOT set NODE_ENV=production here — it applies during build
+      # and causes npm ci to skip devDependencies (e.g. @tailwindcss/postcss).
+      # Render sets NODE_ENV=production automatically at runtime.
       - key: NODE_VERSION
         value: "22"
-      - key: NODE_ENV
-        value: production
       - key: NEXT_TELEMETRY_DISABLED
         value: "1"
       - key: NODE_OPTIONS
