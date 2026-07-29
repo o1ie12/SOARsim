@@ -15,12 +15,15 @@ services:
     env: python
     region: oregon
     plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    # Commands run from repo root — cd into backend/ subdirectory
+    buildCommand: cd backend && pip install -r requirements.txt
+    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
       - key: PYTHONUNBUFFERED
         value: "1"
+      - key: PYTHON_VERSION
+        value: "3.11"
       # Allow all origins for initial deploy — restrict after verifying the frontend URL
       - key: CORS_ORIGINS
         value: "*"
@@ -31,9 +34,10 @@ services:
     env: node
     region: oregon
     plan: free
-    buildCommand: npm install && npm run build
+    # Commands run from repo root — cd into frontend/ subdirectory
+    buildCommand: cd frontend && npm install && npm run build
     # Next.js standalone output places server.js in .next/standalone/
-    startCommand: node .next/standalone/server.js
+    startCommand: cd frontend && node .next/standalone/server.js
     envVars:
       # Point to the backend service via Render's internal DNS
       - key: NEXT_PUBLIC_API_URL
@@ -41,6 +45,8 @@ services:
           name: soarsim-backend
           type: web
           property: host
+      - key: NODE_VERSION
+        value: "20"
       - key: NODE_ENV
         value: production
       - key: NEXT_TELEMETRY_DISABLED

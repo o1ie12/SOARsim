@@ -159,8 +159,13 @@ export interface ApiError {
  * In production, use the deployed backend URL.
  */
 function getApiBaseUrl(): string {
-  if (process.env.NEXT_PUBLIC_API_URL) {
-    return process.env.NEXT_PUBLIC_API_URL;
+  const url = process.env.NEXT_PUBLIC_API_URL;
+  if (url) {
+    // Render's fromService property: host returns just a hostname without protocol
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      return `https://${url}`;
+    }
+    return url;
   }
   // Default to local development server
   return "http://127.0.0.1:8000";

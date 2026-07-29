@@ -8,7 +8,19 @@
  * - Statistics
  */
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+function getApiBaseUrl(): string {
+  const url = process.env.NEXT_PUBLIC_API_URL;
+  if (url) {
+    // Render's fromService property: host returns just a hostname without protocol
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      return `https://${url}`;
+    }
+    return url;
+  }
+  return "http://127.0.0.1:8000";
+}
+
+const API_BASE = getApiBaseUrl();
 
 // ── Types ──────────────────────────────────────────────────────────
 
