@@ -4,8 +4,7 @@
 
 SOAR Studio is a web-based engineering platform for designing rockets, simulating flights, analyzing trajectories, and visualizing propulsion physics in real time. It supports water rockets, solid rocket motors, and custom thrust profiles with advanced analysis capabilities including Monte Carlo uncertainty quantification, parameter sweeps, and design of experiments.
 
-![SOAR Studio Screenshot](https://placehold.co/800x450/1a1a2e/ffffff?text=SOAR+Studio+Dashboard+Screenshot)
-*Screenshot placeholder — replace with an actual screenshot of the SOAR Studio interface.*
+SOAR Studio is accessible online from this link: https://soarsim-frontend.onrender.com/
 
 ---
 
