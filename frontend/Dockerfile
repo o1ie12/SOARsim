@@ -22,6 +22,8 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+# Listen on all interfaces so Render's proxy can reach the app
+ENV HOSTNAME=0.0.0.0
 
 # Copy standalone build output (public/ and .next/static/ are already inside
 # standalone from the cp step above, so no extra COPY needed)
