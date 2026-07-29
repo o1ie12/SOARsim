@@ -79,6 +79,11 @@ yarn-error.log*
 AGENTS.md
 CLAUDE.md
 
+# ---------- AI Agent Tools ----------
+.agents/
+.claude/
+skills-lock.json
+
 # ---------- Freebuff Desktop ----------
 .freebuff/
 

@@ -1,3 +1,14 @@
+/**
+ * SOAR Studio v2.7 — Simulation Form (Redesigned)
+ *
+ * Collapsible section groups:
+ *   - Aerodynamics (expanded)
+ *   - Water Rocket Propulsion (expanded)
+ *   - Launch (expanded)
+ *   - Advanced Settings (collapsed)
+ * Cleaner layout with less visual noise.
+ */
+
 "use client";
 
 import { useState, useMemo } from "react";
@@ -5,8 +16,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Rocket, Loader2, Droplets, Wind, Target } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { Rocket, Loader2, Droplets, Wind, Target, ChevronDown, ChevronRight, Settings2 } from "lucide-react";
 import type {
   SimulateRequest,
   RocketParams,
@@ -64,6 +75,44 @@ const LAUNCH_FIELDS: FieldDef[] = [
   { key: "angle", label: "Launch Angle", unit: "°", min: 0, max: 90, step: 1, format: (v) => v.toFixed(0) },
 ];
 
+// ── Collapsible Section ──────────────────────────────────────────
+
+function Section({
+  title,
+  icon,
+  defaultOpen = true,
+  children,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="flex w-full items-center gap-2 mb-3 text-left"
+      >
+        {open ? (
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+        ) : (
+          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+        )}
+        <div className="flex items-center gap-1.5 text-sm font-semibold">
+          {icon}
+          <span>{title}</span>
+        </div>
+      </button>
+      {open && <div className="space-y-3">{children}</div>}
+    </div>
+  );
+}
+
+// ── Main Form ────────────────────────────────────────────────────
+
 export default function SimulationForm({ onSimulate, loading }: SimulationFormProps) {
   const [rocket, setRocket] = useState<RocketParams>(DEFAULT_ROCKET);
   const [propulsion, setPropulsion] = useState<WaterRocketPropulsion>(DEFAULT_PROPULSION);
@@ -109,73 +158,75 @@ export default function SimulationForm({ onSimulate, loading }: SimulationFormPr
 
   return (
     <Card className="border-border/60 shadow-sm">
-      <CardHeader className="pb-4">
-        <CardTitle className="flex items-center gap-2 text-lg">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-2 text-base">
           <Rocket className="h-5 w-5 text-orange-500" />
           Rocket Configuration
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div>
-          <div className="mb-3 flex items-center gap-2">
-            <Wind className="h-4 w-4 text-muted-foreground" />
-            <h3 className="text-sm font-semibold">Aerodynamics</h3>
-          </div>
-          <div className="space-y-4">
-            {ROCKET_FIELDS.map((field) => (
-              <FormField
-                key={field.key}
-                field={field}
-                value={field.key === "crossSectionalArea" ? rocket[field.key as keyof RocketParams] * 10000 : rocket[field.key as keyof RocketParams] as number}
-                onChange={handleRocketChange(field.key as keyof RocketParams)}
-              />
-            ))}
-          </div>
-        </div>
 
-        <Separator />
+      <CardContent className="space-y-5">
+        {/* Section 1: Aerodynamics */}
+        <Section title="Aerodynamics" icon={<Wind className="h-4 w-4 text-muted-foreground" />} defaultOpen={true}>
+          {ROCKET_FIELDS.map((field) => (
+            <FormField
+              key={field.key}
+              field={field}
+              value={field.key === "crossSectionalArea" ? rocket[field.key as keyof RocketParams] * 10000 : rocket[field.key as keyof RocketParams] as number}
+              onChange={handleRocketChange(field.key as keyof RocketParams)}
+            />
+          ))}
+        </Section>
 
-        <div>
-          <div className="mb-3 flex items-center gap-2">
-            <Droplets className="h-4 w-4 text-blue-500" />
-            <h3 className="text-sm font-semibold">Water Rocket Propulsion</h3>
-          </div>
-          <div className="space-y-4">
-            {PROPULSION_FIELDS.map((field) => {
-              const rawValue = propulsion[field.key as keyof WaterRocketPropulsion] as number;
-              let displayValue = rawValue;
-              if (field.key === "bottleVolume" || field.key === "waterVolume") displayValue = rawValue * 1000;
-              else if (field.key === "initialPressure") displayValue = rawValue / 100000;
-              else if (field.key === "nozzleDiameter") displayValue = rawValue * 1000;
-              return (
-                <FormField key={field.key} field={field} value={displayValue} onChange={handlePropulsionChange(field.key as keyof WaterRocketPropulsion)} />
-              );
-            })}
-            {propulsion.bottleVolume > 0 && (
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Fill ratio</span>
-                <span className={propulsion.waterVolume / propulsion.bottleVolume > 0.4 ? "text-amber-500 font-medium" : "text-emerald-500"}>
-                  {((propulsion.waterVolume / propulsion.bottleVolume) * 100).toFixed(0)}%
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
+        <Separator className="my-1" />
 
-        <Separator />
+        {/* Section 2: Propulsion */}
+        <Section title="Propulsion" icon={<Droplets className="h-4 w-4 text-blue-400" />} defaultOpen={true}>
+          {PROPULSION_FIELDS.map((field) => {
+            const rawValue = propulsion[field.key as keyof WaterRocketPropulsion] as number;
+            let displayValue = rawValue;
+            if (field.key === "bottleVolume" || field.key === "waterVolume") displayValue = rawValue * 1000;
+            else if (field.key === "initialPressure") displayValue = rawValue / 100000;
+            else if (field.key === "nozzleDiameter") displayValue = rawValue * 1000;
+            return (
+              <FormField key={field.key} field={field} value={displayValue} onChange={handlePropulsionChange(field.key as keyof WaterRocketPropulsion)} />
+            );
+          })}
+          {propulsion.bottleVolume > 0 && (
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">Fill ratio</span>
+              <span className={propulsion.waterVolume / propulsion.bottleVolume > 0.4 ? "text-amber-500 font-medium" : "text-emerald-500"}>
+                {((propulsion.waterVolume / propulsion.bottleVolume) * 100).toFixed(0)}%
+              </span>
+            </div>
+          )}
+        </Section>
 
-        <div>
-          <div className="mb-3 flex items-center gap-2">
-            <Target className="h-4 w-4 text-muted-foreground" />
-            <h3 className="text-sm font-semibold">Launch</h3>
-          </div>
-          <div className="space-y-4">
-            {LAUNCH_FIELDS.map((field) => (
-              <FormField key={field.key} field={field} value={launch[field.key as keyof LaunchParams] as number} onChange={handleLaunchChange(field.key as keyof LaunchParams)} />
-            ))}
-          </div>
-        </div>
+        <Separator className="my-1" />
 
+        {/* Section 3: Launch */}
+        <Section title="Launch" icon={<Target className="h-4 w-4 text-muted-foreground" />} defaultOpen={true}>
+          {LAUNCH_FIELDS.map((field) => (
+            <FormField key={field.key} field={field} value={launch[field.key as keyof LaunchParams] as number} onChange={handleLaunchChange(field.key as keyof LaunchParams)} />
+          ))}
+        </Section>
+
+        <Separator className="my-1" />
+
+        {/* Section 4: Advanced Settings (collapsed) */}
+        <Section title="Advanced Settings" icon={<Settings2 className="h-4 w-4 text-muted-foreground" />} defaultOpen={false}>
+          <p className="text-xs text-muted-foreground">
+            Additional parameters for fine-tuning the simulation.
+          </p>
+          {/* Placeholder for future advanced fields */}
+          <FormField
+            field={{ key: "placeholder", label: "Time Step", unit: "s", min: 0.001, max: 0.1, step: 0.001, format: (v) => v.toFixed(3) }}
+            value={0.01}
+            onChange={() => {}}
+          />
+        </Section>
+
+        {/* Validation errors */}
         {validationErrors.length > 0 && (
           <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-950/30">
             {validationErrors.map((error, i) => (
@@ -184,24 +235,58 @@ export default function SimulationForm({ onSimulate, loading }: SimulationFormPr
           </div>
         )}
 
-        <Button onClick={handleSubmit} disabled={loading || validationErrors.length > 0} className="w-full gap-2 rounded-full font-semibold" size="lg">
-          {loading ? (<><Loader2 className="h-4 w-4 animate-spin" /> Simulating...</>) : (<><Rocket className="h-4 w-4" /> Launch!</>)}
+        {/* Launch button */}
+        <Button
+          onClick={handleSubmit}
+          disabled={loading || validationErrors.length > 0}
+          className="w-full gap-2 rounded-full font-semibold"
+          size="lg"
+        >
+          {loading ? (
+            <><Loader2 className="h-4 w-4 animate-spin" /> Simulating...</>
+          ) : (
+            <><Rocket className="h-4 w-4" /> Launch!</>
+          )}
         </Button>
       </CardContent>
     </Card>
   );
 }
 
+// ── Form Field ───────────────────────────────────────────────────
+
 function FormField({ field, value, onChange }: { field: FieldDef; value: number; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
   const displayValue = field.format ? field.format(value) : value.toFixed(2);
   return (
-    <div className="space-y-2">
+    <div className="space-y-1.5">
       <div className="flex items-center justify-between">
-        <Label className="text-sm font-medium">{field.label}</Label>
+        <Label className="text-xs font-medium">{field.label}</Label>
         <span className="text-xs tabular-nums text-muted-foreground">{displayValue} {field.unit}</span>
       </div>
-      <input type="range" min={field.min} max={field.max} step={field.step} value={value} onChange={onChange} className="h-2 w-full cursor-pointer appearance-none rounded-full bg-muted accent-foreground [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-foreground [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110" aria-label={`${field.label} slider`} />
-      <Input type="number" min={field.min} max={field.max} step={field.step} value={value} onChange={onChange} className="h-8 text-xs" aria-label={`${field.label} exact value`} />
+      <input
+        type="range"
+        min={field.min}
+        max={field.max}
+        step={field.step}
+        value={value}
+        onChange={onChange}
+        className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted accent-foreground
+          [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5
+          [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full
+          [&::-webkit-slider-thumb]:bg-foreground [&::-webkit-slider-thumb]:transition-transform
+          [&::-webkit-slider-thumb]:hover:scale-110"
+        aria-label={`${field.label} slider`}
+      />
+      <Input
+        type="number"
+        min={field.min}
+        max={field.max}
+        step={field.step}
+        value={value}
+        onChange={onChange}
+        className="h-7 text-xs"
+        aria-label={`${field.label} exact value`}
+      />
     </div>
   );
 }

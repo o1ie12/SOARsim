@@ -127,4 +127,59 @@
   html {
     @apply font-sans;
   }
+
+  /* ── Typography improvements ── */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+
+  h1 { @apply text-2xl leading-tight; }
+  h2 { @apply text-xl leading-snug; }
+  h3 { @apply text-lg leading-snug; }
+
+  /* ── Card improvements ── */
+  .card-standard {
+    @apply border-border/60 shadow-sm transition-all hover:shadow-md;
+  }
+
+  /* ── Section spacing — only in workflow pages ── */
+  .workflow-section + .workflow-section {
+    @apply mt-8;
+  }
+
+  /* ── Better list spacing ── */
+  ul, ol {
+    @apply space-y-1;
+  }
+
+  /* ── Code blocks ── */
+  code, pre {
+    @apply font-mono text-sm;
+  }
+}
+
+/* ── Utility classes ── */
+
+.section-heading {
+  @apply text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3;
+}
+
+.metric-value {
+  @apply text-xs font-mono font-bold tabular-nums;
+}
+
+.metric-label {
+  @apply text-[10px] font-medium text-muted-foreground;
+}
+
+.warning-critical {
+  @apply border-red-200 bg-red-50/80 dark:border-red-800 dark:bg-red-950/20;
+}
+
+.warning-moderate {
+  @apply border-amber-200 bg-amber-50/80 dark:border-amber-800 dark:bg-amber-950/20;
+}
+
+.success-bg {
+  @apply border-emerald-200 bg-emerald-50/60 dark:border-emerald-800 dark:bg-emerald-950/20;
 }

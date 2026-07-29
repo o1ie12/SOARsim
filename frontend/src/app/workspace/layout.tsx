@@ -17,14 +17,14 @@ import { useState } from "react";
 import { globalSearch, type RocketDesign, type SimulationRecord, type Report } from "@/lib/workspace-api";
 
 const NAV_ITEMS = [
-  { href: "/workspace", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/designer", label: "Rocket Designer", icon: Rocket },
-  { href: "/simulate", label: "Simulation", icon: History },
-  { href: "/workspace/rockets", label: "Rocket Library", icon: FolderOpen },
-  { href: "/workspace/simulations", label: "Simulation History", icon: GitCompareArrows },
-  { href: "/workspace/validations", label: "Validation History", icon: BarChart3 },
-  { href: "/workspace/reports", label: "Reports", icon: FileText },
-  { href: "/compare", label: "Compare Designs", icon: GitCompareArrows },
+  { href: "/workspace", label: "Dashboard", icon: LayoutDashboard, description: "Overview & recent activity" },
+  { href: "/workspace/rockets", label: "Rocket Library", icon: Rocket, description: "Saved designs" },
+  { href: "/workspace/simulations", label: "Simulation History", icon: History, description: "Past flights" },
+  { href: "/workspace/validations", label: "Validation History", icon: BarChart3, description: "Flight data" },
+  { href: "/workspace/reports", label: "Reports", icon: FileText, description: "Generated reports" },
+  { href: "/simulate", label: "Simulation", icon: GitCompareArrows, description: "New simulation" },
+  { href: "/designer", label: "Rocket Designer", icon: FolderOpen, description: "Design rockets" },
+  { href: "/compare", label: "Compare Designs", icon: GitCompareArrows, description: "Side-by-side" },
 ];
 
 export default function WorkspaceLayout({
@@ -62,15 +62,15 @@ export default function WorkspaceLayout({
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
-      <aside className="fixed left-0 top-0 z-40 flex h-full w-64 flex-col border-r border-border/40 bg-background/95 backdrop-blur-xl">
+      <aside className="fixed left-0 top-0 z-40 flex h-full w-56 flex-col border-r border-border/40 bg-background/95 backdrop-blur-xl">
         {/* Logo */}
         <div className="flex h-16 items-center gap-2 border-b border-border/40 px-6">
           <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
             <span className="h-2.5 w-2.5 rounded-full bg-orange-500 animate-pulse" />
             <span className="text-lg font-bold tracking-tight">SOAR Studio</span>
           </Link>
-          <span className="ml-auto rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
-            v2.0
+          <span className="ml-auto rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+            v2.7
           </span>
         </div>
 
@@ -83,37 +83,42 @@ export default function WorkspaceLayout({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
+                  className={`group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
                     isActive
-                      ? "bg-orange-500/10 text-orange-600"
+                      ? "bg-orange-500/10 text-orange-600 dark:bg-orange-500/15"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
                 >
-                  <item.icon className="h-4 w-4" />
-                  {item.label}
+                  <item.icon className={`h-4 w-4 transition-colors ${
+                    isActive ? "text-orange-500" : "text-muted-foreground group-hover:text-foreground"
+                  }`} />
+                  <div className="min-w-0">
+                    <p className="text-xs font-medium leading-tight">{item.label}</p>
+                    <p className="text-[9px] text-muted-foreground/60 leading-tight">{item.description}</p>
+                  </div>
                 </Link>
               );
             })}
           </div>
 
           {/* Quick links */}
-          <div className="mt-8 border-t border-border/40 pt-4">
-            <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Quick Actions
+          <div className="mt-6 border-t border-border/40 pt-3">
+            <p className="mb-1.5 px-3 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Tools
             </p>
             <Link
-              href="/simulate"
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-all hover:bg-muted hover:text-foreground"
+              href="/validate"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium text-muted-foreground transition-all hover:bg-muted hover:text-foreground"
             >
-              <Rocket className="h-4 w-4" />
-              New Simulation
+              <BarChart3 className="h-3.5 w-3.5" />
+              Validation Studio
             </Link>
             <Link
-              href="/validate"
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-all hover:bg-muted hover:text-foreground"
+              href="/analyze"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium text-muted-foreground transition-all hover:bg-muted hover:text-foreground"
             >
-              <BarChart3 className="h-4 w-4" />
-              Upload Flight Data
+              <FileText className="h-3.5 w-3.5" />
+              Analysis Hub
             </Link>
           </div>
         </nav>
@@ -134,7 +139,7 @@ export default function WorkspaceLayout({
       </aside>
 
       {/* Main content area */}
-      <div className="ml-64 flex-1">
+      <div className="ml-56 flex-1">
         {/* Top bar with search */}
         {showSearch && (
           <div className="sticky top-0 z-30 border-b border-border/40 bg-background/80 backdrop-blur-xl">

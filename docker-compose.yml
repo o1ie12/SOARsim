@@ -1,0 +1,55 @@
+# SOARsim — Full-Stack Deployment
+#
+# Orchestrates both the FastAPI backend and Next.js frontend.
+# Run:   docker compose up --build
+# Visit: http://localhost:3000
+#
+# Deploy on Railway: connect this repo, use "Docker Compose" deploy type
+# Deploy on Render:  use render.yaml (single blueprint)
+
+services:
+  # ── Backend: FastAPI physics engine ──────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      # Restrict CORS in production (comma-separated)
+      # - CORS_ORIGINS=http://localhost:3000,https://myapp.com
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    # Mount a persistent volume for workspace data (rocket designs, simulations, reports)
+    volumes:
+      - soarsim-data:/root/.soarsim/workspace
+
+  # ── Frontend: Next.js UI ────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      # Point the frontend to the backend service via Docker networking
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+# ── Named volumes ──────────────────────────────────────────────────
+volumes:
+  soarsim-data:
+    driver: local

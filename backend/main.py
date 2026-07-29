@@ -7,6 +7,8 @@ Run with:
     uvicorn main:app --reload
 """
 
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -21,15 +23,27 @@ app = FastAPI(
     version="2.0.1",
 )
 
-# Allow cross-origin requests from the frontend development server
-# In production, restrict this to the actual frontend URL.
+# CORS configuration — origins from environment or sensible defaults
+# In production, set CORS_ORIGINS to the frontend URL (comma-separated).
+# For Docker Compose, the frontend accesses via http://localhost:3000.
+# For Render, set CORS_ORIGINS to your frontend Render URL.
+_cors_env = os.environ.get("CORS_ORIGINS", "")
+if _cors_env:
+    allowed_origins = [o.strip() for o in _cors_env.split(",") if o.strip()]
+else:
+    # Default when running locally without the env var
+    allowed_origins = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ]
+
+# Credentials can't be used with a wildcard origin per the CORS spec
+_cors_allow_creds = "*" not in allowed_origins
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",  # Next.js dev server
-        "http://127.0.0.1:3000",
-    ],
-    allow_credentials=True,
+    allow_origins=allowed_origins,
+    allow_credentials=_cors_allow_creds,
     allow_methods=["*"],
     allow_headers=["*"],
 )
