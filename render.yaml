@@ -37,11 +37,10 @@ services:
     buildCommand: npm ci && npm run build && cp -r public .next/standalone/public && cp -r .next/static .next/standalone/.next/static
     startCommand: node .next/standalone/server.js
     envVars:
+      # NOTE: fromService property: host returns the PRIVATE network hostname,
+      # which browsers cannot reach. We use the public URL instead.
       - key: NEXT_PUBLIC_API_URL
-        fromService:
-          name: soarsim-backend
-          type: web
-          property: host
+        value: https://soarsim-backend.onrender.com
       - key: NODE_VERSION
         value: "22"
       - key: NODE_ENV
